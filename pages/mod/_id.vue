@@ -4,19 +4,19 @@
       <div class="content">
         <div class="header">
           <div class="icon">
-            <nuxt-link :to="'/mod/' + (mod.slug ? mod.slug : mod.id)">
+            <nuxt-link :to="'/mod/' + mod.packageId">
               <img
                 :src="
-                  mod.icon_url
-                    ? mod.icon_url
+                  mod.iconUrls[0]
+                    ? mod.iconUrls[0]
                     : 'https://cdn.modrinth.com/placeholder.svg?inline'
                 "
-                alt="mod - icon"
+                alt="Icon"
             /></nuxt-link>
           </div>
           <div class="info">
-            <nuxt-link :to="'/mod/' + (mod.slug ? mod.slug : mod.id)">
-              <h1 class="title">{{ mod.title }}</h1>
+            <nuxt-link :to="'/mod/' + mod.packageId">
+              <h1 class="title">{{ mod.name }}</h1>
             </nuxt-link>
             <p class="description">
               {{ mod.description }}
@@ -25,14 +25,14 @@
               <p>
                 <nuxt-link to="/mods"> Mods </nuxt-link>
                 >
-                <nuxt-link :to="'/mod/' + (mod.slug ? mod.slug : mod.id)">{{
-                  mod.title
-                }}</nuxt-link>
-                <span v-if="linkBar.length > 0"> ></span>
+                <nuxt-link :to="'/mod/' + mod.packageId">
+                  {{ mod.name }}
+                </nuxt-link>
+                <span v-if="linkBar.length > 0"> > </span>
                 <nuxt-link
                   v-for="(link, index) in linkBar"
                   :key="index"
-                  :to="/mod/ + (mod.slug ? mod.slug : mod.id) + '/' + link[1]"
+                  :to="/mod/ + mod.packageId + '/' + link[1]"
                   >{{ link[0] }}
                   <span v-if="index !== linkBar.length - 1"> > </span>
                 </nuxt-link>
@@ -42,14 +42,14 @@
           <div class="buttons">
             <nuxt-link
               v-if="this.$auth.user"
-              :to="`/report/create?id=${mod.id}&t=mod`"
+              :to="`/report/create?id=${mod.packageId}&t=mod`"
               class="iconified-button"
             >
               <ReportIcon />
               Report
             </nuxt-link>
             <button
-              v-if="userFollows && !userFollows.includes(mod.id)"
+              v-if="userFollows && !userFollows.includes(mod.packageId)"
               class="iconified-button"
               @click="followMod"
             >
@@ -57,7 +57,7 @@
               Follow
             </button>
             <button
-              v-if="userFollows && userFollows.includes(mod.id)"
+              v-if="userFollows && userFollows.includes(mod.packageId)"
               class="iconified-button"
               @click="unfollowMod"
             >
@@ -68,48 +68,27 @@
         </div>
         <div class="mod-navigation">
           <div class="tabs">
-            <nuxt-link
-              :to="'/mod/' + (mod.slug ? mod.slug : mod.id)"
-              class="tab"
-            >
+            <nuxt-link :to="'/mod/' + mod.packageId" class="tab">
               <span>Description</span>
             </nuxt-link>
-            <nuxt-link
-              :to="'/mod/' + (mod.slug ? mod.slug : mod.id) + '/versions'"
-              class="tab"
-            >
+            <nuxt-link :to="'/mod/' + mod.packageId + '/versions'" class="tab">
               <span>Versions</span>
             </nuxt-link>
-            <a
-              v-if="mod.wiki_url"
-              :href="mod.wiki_url"
-              target="_blank"
-              class="tab"
-            >
+            <a v-if="mod.wiki" :href="mod.wiki" target="_blank" class="tab">
               <ExternalIcon />
               <span>Wiki</span>
             </a>
-            <a
-              v-if="mod.issues_url"
-              :href="mod.issues_url"
-              target="_blank"
-              class="tab"
-            >
+            <a v-if="mod.issues" :href="mod.issues" target="_blank" class="tab">
               <ExternalIcon />
               <span>Issues</span>
             </a>
-            <a
-              v-if="mod.source_url"
-              :href="mod.source_url"
-              target="_blank"
-              class="tab"
-            >
+            <a v-if="mod.source" :href="mod.source" target="_blank" class="tab">
               <ExternalIcon />
               <span>Source</span>
             </a>
             <a
-              v-if="mod.discord_url"
-              :href="mod.discord_url"
+              v-if="mod.chats.discord"
+              :href="mod.chats.discord"
               target="_blank"
               class="tab"
             >
@@ -118,7 +97,7 @@
             </a>
             <nuxt-link
               v-if="currentMember"
-              :to="'/mod/' + mod.id + '/settings'"
+              :to="'/mod/' + mod.packageId + '/settings'"
               class="tab settings-tab"
             >
               <SettingsIcon />
@@ -140,7 +119,7 @@
       </div>
       <section class="mod-info">
         <div class="mod-stats section">
-          <div class="stat">
+          <!-- <div class="stat">
             <DownloadIcon />
             <div class="info">
               <h4>Downloads</h4>
@@ -179,10 +158,10 @@
                 }}
               </p>
             </div>
-          </div>
-          <div class="stat">
-            <EditIcon />
-            <div class="info">
+          </div> -->
+          <!-- <div class="stat">
+            <EditIcon /> -->
+          <!-- <div class="info">
               <h4>Updated</h4>
               <p
                 v-tooltip="
@@ -209,28 +188,28 @@
               <h4>Server Side</h4>
               <p class="value capitalize">{{ mod.server_side }}</p>
             </div>
-          </div>
-          <div class="stat">
+          </div> -->
+          <!-- <div class="stat">
             <FileTextIcon />
             <div class="info">
               <h4>License</h4>
-              <p v-tooltip="mod.license.name" class="value ellipsis">
+              <p v-tooltip="mod.license" class="value ellipsis">
                 <a :href="mod.license.url || null">
                   {{ mod.license.id.toUpperCase() }}</a
                 >
               </p>
             </div>
-          </div>
+          </div> -->
           <div class="stat">
             <CodeIcon />
             <div class="info">
-              <h4>Project ID</h4>
-              <p class="value">{{ mod.id }}</p>
+              <h4>Package ID</h4>
+              <p class="value">{{ mod.packageId }}</p>
             </div>
           </div>
-          <Categories :categories="mod.categories.concat(mod.loaders)" />
+          <!-- <Categories :categories="mod.categories.concat(mod.loaders)" /> -->
         </div>
-        <div class="section">
+        <!-- <div class="section">
           <h3>Members</h3>
           <div
             v-for="member in members"
@@ -245,8 +224,8 @@
               <h3>{{ member.role }}</h3>
             </div>
           </div>
-        </div>
-        <div v-if="featuredVersions.length > 0" class="section">
+        </div> -->
+        <!-- <div v-if="featuredVersions.length > 0" class="section">
           <h3>Featured Versions</h3>
           <div
             v-for="version in featuredVersions"
@@ -284,12 +263,7 @@
                 </span>
                 <h4 class="title">
                   <nuxt-link
-                    :to="
-                      '/mod/' +
-                      (mod.slug ? mod.slug : mod.id) +
-                      '/version/' +
-                      version.id
-                    "
+                    :to="'/mod/' + mod.packageId + '/version/' + version.id"
                   >
                     {{ version.name }}
                   </nuxt-link>
@@ -317,8 +291,8 @@
               </div>
             </div>
           </div>
-        </div>
-        <div
+        </div> -->
+        <!-- <div
           v-if="mod.donation_urls && mod.donation_urls.length > 0"
           class="section"
         >
@@ -333,7 +307,7 @@
               {{ item.platform }}
             </a>
           </div>
-        </div>
+        </div> -->
         <m-footer class="footer" />
       </section>
     </div>
@@ -341,16 +315,16 @@
 </template>
 
 <script>
-import Categories from '~/components/ui/search/Categories'
+// import Categories from '~/components/ui/search/Categories'
 import MFooter from '~/components/layout/MFooter'
 
-import CalendarIcon from '~/assets/images/utils/calendar.svg?inline'
-import DownloadIcon from '~/assets/images/utils/download.svg?inline'
-import EditIcon from '~/assets/images/utils/edit.svg?inline'
-import TagIcon from '~/assets/images/utils/tag.svg?inline'
-import ClientIcon from '~/assets/images/utils/client.svg?inline'
-import ServerIcon from '~/assets/images/utils/server.svg?inline'
-import FileTextIcon from '~/assets/images/utils/file-text.svg?inline'
+// import CalendarIcon from '~/assets/images/utils/calendar.svg?inline'
+// import DownloadIcon from '~/assets/images/utils/download.svg?inline'
+// import EditIcon from '~/assets/images/utils/edit.svg?inline'
+// import TagIcon from '~/assets/images/utils/tag.svg?inline'
+// import ClientIcon from '~/assets/images/utils/client.svg?inline'
+// import ServerIcon from '~/assets/images/utils/server.svg?inline'
+// import FileTextIcon from '~/assets/images/utils/file-text.svg?inline'
 import CodeIcon from '~/assets/images/sidebar/mod.svg?inline'
 import ReportIcon from '~/assets/images/utils/report.svg?inline'
 import FollowIcon from '~/assets/images/utils/heart.svg?inline'
@@ -358,25 +332,25 @@ import FollowIcon from '~/assets/images/utils/heart.svg?inline'
 import ExternalIcon from '~/assets/images/utils/external.svg?inline'
 import SettingsIcon from '~/assets/images/utils/settings.svg?inline'
 
-import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
-import FabricIcon from '~/assets/images/categories/fabric.svg?inline'
+// import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
+// import FabricIcon from '~/assets/images/categories/fabric.svg?inline'
 
 export default {
   name: 'ModPage',
   components: {
     MFooter,
-    Categories,
+    // Categories,
     ExternalIcon,
     SettingsIcon,
-    ForgeIcon,
-    FabricIcon,
-    DownloadIcon,
-    CalendarIcon,
-    EditIcon,
-    TagIcon,
-    ClientIcon,
-    ServerIcon,
-    FileTextIcon,
+    // ForgeIcon,
+    // FabricIcon,
+    // DownloadIcon,
+    // CalendarIcon,
+    // EditIcon,
+    // TagIcon,
+    // ClientIcon,
+    // ServerIcon,
+    // FileTextIcon,
     CodeIcon,
     ReportIcon,
     FollowIcon,
@@ -387,49 +361,52 @@ export default {
         await data.$axios.get(`mod/${data.params.id}`, data.$auth.headers)
       ).data
 
-      const [members, versions, featuredVersions, userFollows] = (
-        await Promise.all([
-          data.$axios.get(`team/${mod.team}/members`, data.$auth.headers),
-          data.$axios.get(`mod/${mod.id}/version`),
-          data.$axios.get(`mod/${mod.id}/version?featured=true`),
-          data.$axios.get(
-            data.$auth.user
-              ? `user/${data.$auth.user.id}/follows`
-              : `https://api.modrinth.com`,
-            data.$auth.headers
-          ),
-        ])
-      ).map((it) => it.data)
+      mod.packageId = 'CaffeineMC.sodium'
 
-      const users = (
-        await data.$axios.get(
-          `users?ids=${JSON.stringify(members.map((it) => it.user_id))}`,
-          data.$auth.headers
-        )
-      ).data
+      // const [members, versions, featuredVersions, userFollows] = (
+      //   await Promise.all([
+      //     data.$axios.get(`team/${mod.team}/members`, data.$auth.headers),
+      //     data.$axios.get(`mod/${mod.packageId}/version`),
+      //     data.$axios.get(`mod/${mod.packageId}/version?featured=true`),
+      //     data.$axios.get(
+      //       data.$auth.user
+      //         ? `user/${data.$auth.user.id}/follows`
+      //         : `https://api.modrinth.com`,
+      //       data.$auth.headers
+      //     ),
+      //   ])
+      // ).map((it) => it.data)
 
-      users.forEach((it) => {
-        const index = members.findIndex((x) => x.user_id === it.id)
-        members[index].avatar_url = it.avatar_url
-        members[index].name = it.username
-      })
+      // const users = (
+      //   await data.$axios.get(
+      //     `users?ids=${JSON.stringify(members.map((it) => it.user_id))}`,
+      //     data.$auth.headers
+      //   )
+      // ).data
 
-      const currentMember = data.$auth.user
-        ? members.find((x) => x.user_id === data.$auth.user.id)
-        : null
+      // users.forEach((it) => {
+      //   const index = members.findIndex((x) => x.user_id === it.id)
+      //   members[index].avatar_url = it.avatar_url
+      //   members[index].name = it.username
+      // })
 
-      if (mod.body_url && !mod.body) {
-        mod.body = (await data.$axios.get(mod.body_url)).data
-      }
+      // const currentMember = data.$auth.user
+      //   ? members.find((x) => x.user_id === data.$auth.user.id)
+      //   : null
+
+      // if (mod.body_url && !mod.body) {
+      //   mod.body = (await data.$axios.get(mod.body_url)).data
+      // }
+      mod.body = mod.description
 
       return {
         mod,
-        versions,
-        featuredVersions,
-        members: members.filter((x) => x.accepted),
-        allMembers: members,
-        currentMember,
-        userFollows: userFollows.name ? null : userFollows,
+        // versions,
+        // featuredVersions,
+        // members: members.filter((x) => x.accepted),
+        // allMembers: members,
+        // currentMember,
+        // userFollows: userFollows.name ? null : userFollows,
         linkBar: [],
       }
     } catch {
@@ -451,7 +428,7 @@ export default {
       }
 
       if (!file) {
-        file = { url: `/mod/${this.mod.id}/version/${version.id}` }
+        file = { url: `/mod/${this.mod.packageId}/version/${version.id}` }
       }
 
       return file
@@ -466,17 +443,20 @@ export default {
     },
     async followMod() {
       await this.$axios.post(
-        `mod/${this.mod.id}/follow`,
+        `mod/${this.mod.packageId}/follow`,
         {},
         this.$auth.headers
       )
 
-      this.userFollows.push(this.mod.id)
+      this.userFollows.push(this.mod.packageId)
     },
     async unfollowMod() {
-      await this.$axios.delete(`mod/${this.mod.id}/follow`, this.$auth.headers)
+      await this.$axios.delete(
+        `mod/${this.mod.packageId}/follow`,
+        this.$auth.headers
+      )
 
-      this.userFollows.splice(this.userFollows.indexOf(this.mod.id), 1)
+      this.userFollows.splice(this.userFollows.indexOf(this.mod.packageId), 1)
     },
     formatTime(date) {
       let defaultMessage = this.$dayjs(date).fromNow()
@@ -488,7 +468,7 @@ export default {
   },
   head() {
     return {
-      title: this.mod.title + ' - Modrinth',
+      title: this.mod.name + ' - Modrinth',
       meta: [
         {
           hid: 'og:type',
@@ -498,12 +478,12 @@ export default {
         {
           hid: 'og:title',
           name: 'og:title',
-          content: this.mod.title,
+          content: this.mod.name,
         },
         {
           hid: 'apple-mobile-web-app-title',
           name: 'apple-mobile-web-app-title',
-          content: this.mod.title,
+          content: this.mod.name,
         },
         {
           hid: 'og:description',
@@ -513,18 +493,18 @@ export default {
         {
           hid: 'description',
           name: 'description',
-          content: `${this.mod.title}: ${this.mod.description} View other minecraft mods on Modrinth today! Modrinth is a new and modern Minecraft modding platform supporting both the Forge and Fabric mod loaders.`,
+          content: `${this.mod.name}: ${this.mod.description} View other minecraft mods on Modrinth today! Modrinth is a new and modern Minecraft modding platform supporting both the Forge and Fabric mod loaders.`,
         },
         {
           hid: 'og:url',
           name: 'og:url',
-          content: `https://modrinth.com/mod/${this.mod.id}`,
+          content: `https://modrinth.com/mod/${this.mod.packageId}`,
         },
         {
           hid: 'og:image',
           name: 'og:image',
-          content: this.mod.icon_url
-            ? this.mod.icon_url
+          content: this.mod.iconUrls[0]
+            ? this.mod.iconUrls[0]
             : 'https://cdn.modrinth.com/placeholder.png',
         },
         {
@@ -674,18 +654,18 @@ export default {
   }
 
   .mod-stats {
-    display: flex;
-    flex-wrap: wrap;
+    // display: flex;
+    // flex-wrap: wrap;
     margin-top: 0;
     p {
-      max-width: 6rem;
+      // max-width: 6rem;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: '';
       margin: 3px;
     }
     .stat {
-      width: 8.5rem;
+      // width: 8.5rem;
       margin: 0.75rem;
       @extend %stat;
 
