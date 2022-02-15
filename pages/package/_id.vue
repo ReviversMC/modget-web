@@ -4,7 +4,7 @@
       <div class="content">
         <div class="header">
           <div class="icon">
-            <nuxt-link :to="'/modpackage/' + modpackage.packageId">
+            <nuxt-link :to="'/package/' + modpackage.packageId">
               <img
                 :src="
                   modpackage.iconUrls[0]
@@ -15,7 +15,7 @@
             /></nuxt-link>
           </div>
           <div class="info">
-            <nuxt-link :to="'/modpackage/' + modpackage.packageId">
+            <nuxt-link :to="'/package/' + modpackage.packageId">
               <h1 class="title">{{ modpackage.name }}</h1>
             </nuxt-link>
             <p class="description">
@@ -25,14 +25,14 @@
               <p>
                 <nuxt-link to="/mods"> Mods </nuxt-link>
                 >
-                <nuxt-link :to="'/modpackage/' + modpackage.packageId">
+                <nuxt-link :to="'/package/' + modpackage.packageId">
                   {{ modpackage.name }}
                 </nuxt-link>
                 <span v-if="linkBar.length > 0"> > </span>
                 <nuxt-link
                   v-for="(link, index) in linkBar"
                   :key="index"
-                  :to="/modpackage/ + modpackage.packageId + '/' + link[1]"
+                  :to="/package/ + modpackage.packageId + '/' + link[1]"
                   >{{ link[0] }}
                   <span v-if="index !== linkBar.length - 1"> > </span>
                 </nuxt-link>
@@ -68,11 +68,11 @@
         </div>
         <div class="modpackage-navigation">
           <div class="tabs">
-            <nuxt-link :to="'/modpackage/' + modpackage.packageId" class="tab">
+            <nuxt-link :to="'/package/' + modpackage.packageId" class="tab">
               <span>Description</span>
             </nuxt-link>
             <nuxt-link
-              :to="'/modpackage/' + modpackage.packageId + '/versions'"
+              :to="'/package/' + modpackage.packageId + '/versions'"
               class="tab"
             >
               <span>Versions</span>
@@ -115,7 +115,7 @@
             </a>
             <nuxt-link
               v-if="currentMember"
-              :to="'/modpackage/' + modpackage.packageId + '/settings'"
+              :to="'/package/' + modpackage.packageId + '/settings'"
               class="tab settings-tab"
             >
               <SettingsIcon />
@@ -127,7 +127,7 @@
           <NuxtChild
             :modpackage="modpackage"
             :versions="versions"
-            :featured-versions="featuredVersions"
+            :featured-versions="modpackage.featuredVersions"
             :members="members"
             :current-member="currentMember"
             :all-members="allMembers"
@@ -137,121 +137,147 @@
       </div>
       <section class="modpackage-info">
         <div class="modpackage-stats section">
-          <!-- <div class="stat">
-            <DownloadIcon />
-            <div class="info">
-              <h4>Downloads</h4>
-              <p class="value">{{ formatNumber(modpackage.downloads) }}</p>
+          <div class="modpackage-stats__info">
+            <!-- <div class="stat">
+              <DownloadIcon />
+              <div class="info">
+                <h4>Downloads</h4>
+                <p class="value">{{ formatNumber(modpackage.downloads) }}</p>
+              </div>
             </div>
-          </div>
-          <div class="stat">
-            <CalendarIcon />
-            <div class="info">
-              <h4>Created</h4>
-              <p
-                v-tooltip="
-                  $dayjs(modpackage.published).format(
-                    '[Created on] YYYY-MM-DD [at] HH:mm A'
-                  )
-                "
-                class="value"
-              >
-                {{ formatTime(modpackage.published) }}
-              </p>
-            </div>
-          </div>
-          <div class="stat">
-            <TagIcon />
-            <div class="info">
-              <h4>Available For</h4>
-              <p class="value">
-                {{
-                  versions[0]
-                    ? versions[0].game_versions[0]
-                      ? versions[0].game_versions[
-                          versions[0].game_versions.length - 1
-                        ]
-                      : 'None'
-                    : 'None'
-                }}
-              </p>
-            </div>
-          </div> -->
-          <!-- <div class="stat">
-            <EditIcon /> -->
-          <!-- <div class="info">
-              <h4>Updated</h4>
-              <p
-                v-tooltip="
-                  $dayjs(modpackage.updated).format(
-                    '[Updated on] YYYY-MM-DD [at] HH:mm A'
-                  )
-                "
-                class="value"
-              >
-                {{ formatTime(modpackage.updated) }}
-              </p>
-            </div>
-          </div>
-          <div class="stat">
-            <ClientIcon />
-            <div class="info">
-              <h4>Client Side</h4>
-              <p class="value capitalize">{{ modpackage.client_side }}</p>
-            </div>
-          </div>
-          <div class="stat">
-            <ServerIcon />
-            <div class="info">
-              <h4>Server Side</h4>
-              <p class="value capitalize">{{ modpackage.server_side }}</p>
-            </div>
-          </div> -->
-          <!-- <div class="stat">
-            <FileTextIcon />
-            <div class="info">
-              <h4>License</h4>
-              <p v-tooltip="modpackage.license" class="value ellipsis">
-                <a :href="modpackage.license.url || null">
-                  {{ modpackage.license.id.toUpperCase() }}</a
+            <div class="stat">
+              <CalendarIcon />
+              <div class="info">
+                <h4>Created</h4>
+                <p
+                  v-tooltip="
+                    $dayjs(modpackage.published).format(
+                      '[Created on] YYYY-MM-DD [at] HH:mm A'
+                    )
+                  "
+                  class="value"
                 >
-              </p>
+                  {{ formatTime(modpackage.published) }}
+                </p>
+              </div>
             </div>
-          </div> -->
-          <div class="stat">
-            <TagIcon />
-            <div class="info">
-              <h4>Status</h4>
-              <p v-tooltip="modpackage.status" class="value ellipsis">
-                {{ modpackage.status.toLowerCase() }}
-              </p>
+            <div class="stat">
+              <TagIcon />
+              <div class="info">
+                <h4>Available For</h4>
+                <p class="value">
+                  {{
+                    versions[0]
+                      ? versions[0].game_versions[0]
+                        ? versions[0].game_versions[
+                            versions[0].game_versions.length - 1
+                          ]
+                        : 'None'
+                      : 'None'
+                  }}
+                </p>
+              </div>
+            </div> -->
+            <!-- <div class="stat">
+              <EditIcon /> -->
+            <!-- <div class="info">
+                <h4>Updated</h4>
+                <p
+                  v-tooltip="
+                    $dayjs(modpackage.updated).format(
+                      '[Updated on] YYYY-MM-DD [at] HH:mm A'
+                    )
+                  "
+                  class="value"
+                >
+                  {{ formatTime(modpackage.updated) }}
+                </p>
+              </div>
             </div>
-          </div>
-          <div class="stat">
-            <FabricIcon />
-            <div class="info">
-              <h4>Loader</h4>
-              <span
-                v-for="loader in modpackage.loaders"
-                :key="loader"
-                v-tooltip="modpackage.loaders"
-                class="value ellipsis"
-              >
+            <div class="stat">
+              <ClientIcon />
+              <div class="info">
+                <h4>Client Side</h4>
+                <p class="value capitalize">{{ modpackage.client_side }}</p>
+              </div>
+            </div>
+            <div class="stat">
+              <ServerIcon />
+              <div class="info">
+                <h4>Server Side</h4>
+                <p class="value capitalize">{{ modpackage.server_side }}</p>
+              </div>
+            </div> -->
+            <!-- <div class="stat">
+              <FileTextIcon />
+              <div class="info">
+                <h4>License</h4>
+                <p v-tooltip="modpackage.license" class="value ellipsis">
+                  <a :href="modpackage.license.url || null">
+                    {{ modpackage.license.id.toUpperCase() }}</a
+                  >
+                </p>
+              </div>
+            </div> -->
+            <div class="stat">
+              <TagIcon />
+              <div class="info">
+                <h4>Status</h4>
+                <p v-tooltip="modpackage.status" class="value ellipsis">
+                  {{ modpackage.status.toLowerCase() }}
+                </p>
+              </div>
+            </div>
+            <div class="stat">
+              <FabricIcon />
+              <div class="info">
+                <h4>Loader</h4>
                 <span
-                  v-if="loader != modpackage.loaders[0]"
-                  style="display: inline"
-                  >&
+                  v-for="loader in modpackage.loaders"
+                  :key="loader"
+                  v-tooltip="modpackage.loaders"
+                  class="value ellipsis"
+                >
+                  <span
+                    v-if="loader != modpackage.loaders[0]"
+                    style="display: inline"
+                    >&
+                  </span>
+                  {{ loader.toLowerCase() }}
                 </span>
-                {{ loader.toLowerCase() }}
-              </span>
+              </div>
+            </div>
+            <div class="stat">
+              <FileTextIcon />
+              <div class="info">
+                <h4>Alternative Names</h4>
+                <span
+                  v-for="name in modpackage.alternativeNames"
+                  :key="name"
+                  v-tooltip="modpackage.alternativeNames"
+                  class="value ellipsis"
+                >
+                  <span
+                    v-if="name != modpackage.alternativeNames[0]"
+                    style="display: inline"
+                    >&
+                  </span>
+                  {{ name.toLowerCase() }}
+                </span>
+              </div>
+            </div>
+
+            <div class="stat">
+              <CodeIcon />
+              <div class="info">
+                <h4>Package ID</h4>
+                <p class="value">{{ modpackage.packageId }}</p>
+              </div>
             </div>
           </div>
-          <div class="stat">
-            <CodeIcon />
-            <div class="info">
-              <h4>Package ID</h4>
-              <p class="value">{{ modpackage.packageId }}</p>
-            </div>
+
+          <div class="modpackage-stats__categories">
+            <Categories :categories="modpackage.tags" />
           </div>
         </div>
         <div class="section">
@@ -273,73 +299,73 @@
             </div>
           </div>
         </div>
-        <!-- <div v-if="featuredVersions.length > 0" class="section">
+
+        <div v-if="modpackage.featuredVersions.length > 0" class="section">
           <h3>Featured Versions</h3>
           <div
-            v-for="version in featuredVersions"
-            :key="version.id"
+            v-for="version in modpackage.featuredVersions"
+            :key="version.version"
             class="featured-version"
           >
-            <a
-              :href="findPrimary(version).url"
-              class="download"
-              @click.prevent="
-                downloadFile(
-                  findPrimary(version).hashes.sha1,
-                  findPrimary(version).url
-                )
-              "
-            >
+            <a :href="version.downloadPageUrls.modrinth" class="download">
               <DownloadIcon />
             </a>
             <div class="info">
               <div class="top">
                 <span
-                  v-if="version.version_type === 'release'"
+                  v-if="version.channel.toLowerCase() === 'release'"
                   class="badge green"
                 >
                   Release
                 </span>
                 <span
-                  v-if="version.version_type === 'beta'"
+                  v-else-if="version.channel.toLowerCase() === 'beta'"
                   class="badge yellow"
                 >
                   Beta
                 </span>
-                <span v-if="version.version_type === 'alpha'" class="badge red">
+                <span
+                  v-else-if="version.channel.toLowerCase() === 'alpha'"
+                  class="badge red"
+                >
                   Alpha
                 </span>
                 <h4 class="title">
                   <nuxt-link
-                    :to="'/modpackage/' + modpackage.packageId + '/version/' + version.id"
+                    :to="
+                      '/package/' +
+                      modpackage.packageId +
+                      '/version/' +
+                      version.version
+                    "
                   >
-                    {{ version.name }}
+                    {{ version.version }}
                   </nuxt-link>
                 </h4>
               </div>
               <div class="bottom">
                 <span class="version-number limit-text-width">
-                  {{ version.version_number }} ·
+                  {{ version.version }} ·
                 </span>
                 <FabricIcon
-                  v-if="version.loaders.includes('fabric')"
+                  v-if="version.loaders.includes('FABRIC')"
                   class="loader"
                 />
                 <ForgeIcon
-                  v-if="version.loaders.includes('forge')"
+                  v-if="version.loaders.includes('FORGE')"
                   class="loader"
                 />
                 <span
-                  v-if="version.game_versions.length > 0"
+                  v-if="version.minecraftVersions.length > 0"
                   class="game-version limit-text-width"
                 >
                   ·
-                  {{ version.game_versions[version.game_versions.length - 1] }}
+                  {{ version.minecraftVersions[0] }}
                 </span>
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
         <!-- <div
           v-if="modpackage.donation_urls && modpackage.donation_urls.length > 0"
           class="section"
@@ -363,15 +389,16 @@
 </template>
 
 <script>
+import Categories from '~/components/ui/search/Categories'
 import MFooter from '~/components/layout/MFooter'
 
 // import CalendarIcon from '~/assets/images/utils/calendar.svg?inline'
-// import DownloadIcon from '~/assets/images/utils/download.svg?inline'
+import DownloadIcon from '~/assets/images/utils/download.svg?inline'
 // import EditIcon from '~/assets/images/utils/edit.svg?inline'
 import TagIcon from '~/assets/images/utils/tag.svg?inline'
 // import ClientIcon from '~/assets/images/utils/client.svg?inline'
 // import ServerIcon from '~/assets/images/utils/server.svg?inline'
-// import FileTextIcon from '~/assets/images/utils/file-text.svg?inline'
+import FileTextIcon from '~/assets/images/utils/file-text.svg?inline'
 import CodeIcon from '~/assets/images/sidebar/mod.svg?inline'
 import ReportIcon from '~/assets/images/utils/report.svg?inline'
 import FollowIcon from '~/assets/images/utils/heart.svg?inline'
@@ -379,24 +406,25 @@ import FollowIcon from '~/assets/images/utils/heart.svg?inline'
 import ExternalIcon from '~/assets/images/utils/external.svg?inline'
 import SettingsIcon from '~/assets/images/utils/settings.svg?inline'
 
-// import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
+import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
 import FabricIcon from '~/assets/images/categories/fabric.svg?inline'
 
 export default {
   name: 'PackagePage',
   components: {
     MFooter,
+    Categories,
     ExternalIcon,
     SettingsIcon,
-    // ForgeIcon,
+    ForgeIcon,
     FabricIcon,
-    // DownloadIcon,
+    DownloadIcon,
     // CalendarIcon,
     // EditIcon,
     TagIcon,
     // ClientIcon,
     // ServerIcon,
-    // FileTextIcon,
+    FileTextIcon,
     CodeIcon,
     ReportIcon,
     FollowIcon,
@@ -463,21 +491,6 @@ export default {
   methods: {
     formatNumber(x) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-    },
-    findPrimary(version) {
-      let file = version.files.find((x) => x.primary)
-
-      if (!file) {
-        file = version.files[0]
-      }
-
-      if (!file) {
-        file = {
-          url: `/modpackage/${this.modpackage.packageId}/version/${version.id}`,
-        }
-      }
-
-      return file
     },
     async downloadFile(hash, url) {
       await this.$axios.get(`version_file/${hash}/download`)
@@ -703,27 +716,34 @@ export default {
   }
 
   .modpackage-stats {
-    display: flex;
-    flex-wrap: wrap;
     padding: 0.5rem;
-    p {
-      // max-width: 6rem;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: '';
-      margin: 3px;
-    }
-    .stat {
-      min-width: 8.5rem;
-      padding: 0.75rem;
-      box-sizing: border-box;
-      @extend %stat;
 
-      svg {
-        padding: 0.25rem;
-        border-radius: 50%;
-        background-color: var(--color-button-bg);
+    .modpackage-stats__info {
+      display: flex;
+      flex-wrap: wrap;
+      p {
+        // max-width: 6rem;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: '';
+        margin: 3px;
       }
+      .stat {
+        min-width: 8.5rem;
+        padding: 0.65rem;
+        box-sizing: border-box;
+        @extend %stat;
+
+        svg {
+          padding: 0.25rem;
+          border-radius: 50%;
+          background-color: var(--color-button-bg);
+        }
+      }
+    }
+    .modpackage-stats__categories {
+      margin-top: 0.5rem;
+      display: flex;
     }
   }
 
