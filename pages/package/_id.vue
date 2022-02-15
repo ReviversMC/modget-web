@@ -241,16 +241,21 @@
                   <span
                     v-if="loader != modpackage.loaders[0]"
                     style="display: inline"
-                    >&
+                    >,
                   </span>
-                  {{ loader.toLowerCase() }}
-                </span>
+                  {{ loader.toLowerCase() }}</span
+                >
               </div>
             </div>
             <div class="stat">
               <FileTextIcon />
               <div class="info">
                 <h4>Alternative Names</h4>
+                <span
+                  v-if="modpackage.alternativeNames.length < 1"
+                  class="value ellipsis"
+                  >N/A
+                </span>
                 <span
                   v-for="name in modpackage.alternativeNames"
                   :key="name"
@@ -260,10 +265,10 @@
                   <span
                     v-if="name != modpackage.alternativeNames[0]"
                     style="display: inline"
-                    >&
+                    >,
                   </span>
-                  {{ name.toLowerCase() }}
-                </span>
+                  {{ name.toLowerCase() }}</span
+                >
               </div>
             </div>
 
@@ -339,7 +344,12 @@
                       version.version
                     "
                   >
-                    {{ version.version }}
+                    {{ version.version }} for Minecraft
+                    {{
+                      version.minecraftVersions[
+                        version.minecraftVersions.length - 1
+                      ]
+                    }}<span v-if="version.minecraftVersions.length > 1">+</span>
                   </nuxt-link>
                 </h4>
               </div>
