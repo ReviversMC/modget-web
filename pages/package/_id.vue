@@ -229,7 +229,9 @@
               </div>
             </div>
             <div class="stat">
-              <FabricIcon />
+              <FabricIcon v-if="modpackage.loaders.includes('FABRIC')" />
+              <ForgeIcon v-else-if="modpackage.loaders.includes('FORGE')" />
+              <FabricIcon v-else />
               <div class="info">
                 <h4>Loader</h4>
                 <span
