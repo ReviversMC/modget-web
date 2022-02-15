@@ -1,61 +1,60 @@
 <template>
   <div class="categories">
-    <p v-if="categories.includes('fabric')">
-      <FabricLoader aria-hidden="true" />
-      Fabric
-    </p>
-    <p v-if="categories.includes('forge')">
-      <ForgeLoader aria-hidden="true" />
-      Forge
-    </p>
-    <p v-if="categories.includes('technology')">
-      <TechCategory aria-hidden="true" />
-      Technology
-    </p>
-    <p v-if="categories.includes('adventure')">
-      <AdventureCategory aria-hidden="true" />
-      Adventure
-    </p>
-    <p v-if="categories.includes('magic')">
-      <MagicCategory aria-hidden="true" />
-      Magic
-    </p>
-    <p v-if="categories.includes('utility')">
-      <UtilityCategory aria-hidden="true" />
-      Utility
-    </p>
-    <p v-if="categories.includes('decoration')">
-      <DecorationCategory aria-hidden="true" />
-      Decoration
-    </p>
-    <p v-if="categories.includes('library')">
-      <LibraryCategory aria-hidden="true" />
-      Library
-    </p>
-    <p v-if="categories.includes('cursed')">
-      <CursedCategory aria-hidden="true" />
-      Cursed
-    </p>
-    <p v-if="categories.includes('worldgen')">
-      <WorldGenCategory aria-hidden="true" />
-      Worldgen
-    </p>
-    <p v-if="categories.includes('storage')">
-      <StorageCategory aria-hidden="true" />
-      Storage
-    </p>
-    <p v-if="categories.includes('food')">
-      <FoodCategory aria-hidden="true" />
-      Food
-    </p>
-    <p v-if="categories.includes('equipment')">
-      <EquipmentCategory aria-hidden="true" />
-      Equipment
-    </p>
-    <p v-if="categories.includes('misc')">
-      <MiscCategory aria-hidden="true" />
-      Misc
-    </p>
+    <div v-for="category in categories" :key="category">
+      <p v-if="category === 'technology'">
+        <TechCategory aria-hidden="true" />
+        Technology
+      </p>
+      <p v-else-if="category === 'adventure'">
+        <AdventureCategory aria-hidden="true" />
+        Adventure
+      </p>
+      <p v-else-if="category === 'magic'">
+        <MagicCategory aria-hidden="true" />
+        Magic
+      </p>
+      <p v-else-if="category === 'utility'">
+        <UtilityCategory aria-hidden="true" />
+        Utility
+      </p>
+      <p v-else-if="category === 'decoration'">
+        <DecorationCategory aria-hidden="true" />
+        Decoration
+      </p>
+      <p v-else-if="category === 'library'">
+        <LibraryCategory aria-hidden="true" />
+        Library
+      </p>
+      <p v-else-if="category === 'cursed'">
+        <CursedCategory aria-hidden="true" />
+        Cursed
+      </p>
+      <p v-else-if="category === 'worldgen'">
+        <WorldGenCategory aria-hidden="true" />
+        WorldGen
+      </p>
+      <p v-else-if="category === 'storage'">
+        <StorageCategory aria-hidden="true" />
+        Storage
+      </p>
+      <p v-else-if="category === 'food'">
+        <FoodCategory aria-hidden="true" />
+        Food
+      </p>
+      <p v-else-if="category === 'equipment'">
+        <EquipmentCategory aria-hidden="true" />
+        Equipment
+      </p>
+      <p v-else-if="category === 'miscellaneous'">
+        <MiscCategory aria-hidden="true" />
+        Misc
+      </p>
+
+      <p v-else>
+        <MiscCategory aria-hidden="true" />
+        {{ category }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -73,9 +72,6 @@ import StorageCategory from '~/assets/images/categories/storage.svg?inline'
 import UtilityCategory from '~/assets/images/categories/utility.svg?inline'
 import WorldGenCategory from '~/assets/images/categories/worldgen.svg?inline'
 
-import ForgeLoader from '~/assets/images/categories/forge.svg?inline'
-import FabricLoader from '~/assets/images/categories/fabric.svg?inline'
-
 export default {
   name: 'Categories',
   components: {
@@ -91,8 +87,6 @@ export default {
     StorageCategory,
     UtilityCategory,
     WorldGenCategory,
-    ForgeLoader,
-    FabricLoader,
   },
   props: {
     categories: {

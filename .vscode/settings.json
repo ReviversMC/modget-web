@@ -1,5 +1,9 @@
 {
   "prettier.endOfLine": "lf",
   "editor.formatOnSave": true,
-  "cSpell.words": ["Nuxt"]
+  "cSpell.words": [
+    "minecraft",
+    "nuxt",
+    "optifine"
+  ]
 }
