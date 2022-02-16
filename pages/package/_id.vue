@@ -372,6 +372,14 @@
                   class="game-version limit-text-width"
                 >
                   ·
+                  <span v-if="version.minecraftVersions.length > 1">
+                    {{
+                      version.minecraftVersions[
+                        version.minecraftVersions.length - 1
+                      ]
+                    }}
+                    -
+                  </span>
                   {{ version.minecraftVersions[0] }}
                 </span>
               </div>
