@@ -3,21 +3,21 @@
     <table>
       <thead>
         <tr>
-          <th></th>
-          <th>Version</th>
-          <th>Mod Loader</th>
-          <th>Minecraft Versions</th>
-          <th>Channel</th>
-          <th>Hoster</th>
+          <!-- <th></th> -->
+          <th><span>Version</span></th>
+          <th><span>Mod Loader</span></th>
+          <th><span>Minecraft Versions</span></th>
+          <th><span>Channel</span></th>
+          <th><span>Hoster</span></th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="version in versions" :key="version.version">
-          <td>
+          <!-- <td>
             <a :href="version.downloadPageUrls.modrinth" class="download">
               <DownloadIcon />
             </a>
-          </td>
+          </td> -->
           <td>
             <nuxt-link
               :to="
@@ -94,7 +94,7 @@
   </div>
 </template>
 <script>
-import DownloadIcon from '~/assets/images/utils/download.svg?inline'
+// import DownloadIcon from '~/assets/images/utils/download.svg?inline'
 import ForgeIcon from '~/assets/images/categories/forge.svg?inline'
 import FabricIcon from '~/assets/images/categories/fabric.svg?inline'
 
@@ -102,7 +102,7 @@ export default {
   components: {
     ForgeIcon,
     FabricIcon,
-    DownloadIcon,
+    // DownloadIcon,
   },
   auth: false,
   props: {
@@ -154,37 +154,39 @@ table {
 
   th,
   td {
-    &:first-child {
-      text-align: center;
-      width: 7%;
-      .download {
-        display: flex;
-        align-items: center;
-        height: 2.25rem;
-        width: 2.25rem;
-        border-radius: 2rem;
-        margin: auto;
-        background-color: var(--color-button-bg);
-        &:hover {
-          background-color: var(--color-button-bg-hover);
-        }
-        svg {
-          width: 1.25rem;
-          margin: auto;
-        }
-      }
+    > a {
+      display: inline-block;
+      width: 100%;
+      padding: 15px 0px;
     }
-
     // &:first-child {
-    //   width: 6%;
+    //   text-align: center;
+    //   width: 7%;
+    //   .download {
+    //     display: flex;
+    //     align-items: center;
+    //     height: 2.25rem;
+    //     width: 2.25rem;
+    //     border-radius: 2rem;
+    //     margin: auto;
+    //     background-color: var(--color-button-bg);
+    //     &:hover {
+    //       background-color: var(--color-button-bg-hover);
+    //     }
+    //     svg {
+    //       width: 1.25rem;
+    //       margin: auto;
+    //     }
+    //   }
     // }
+
+    &:first-child > * {
+      margin-left: 5%;
+    }
     &:nth-child(2),
-    &:nth-child(5) {
+    &:nth-child(4) {
       padding-left: 0;
       width: 12%;
-    }
-    &:nth-child(3) {
-      width: 10%;
     }
   }
 
@@ -233,23 +235,40 @@ table {
 //   }
 // }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 620px) {
   th,
   td {
-    &:nth-child(2) {
+    &:first-child {
+      > * {
+        margin-left: 0 !important;
+      }
+    }
+    &:nth-child(5) {
       display: none;
     }
-    &:nth-child(4) {
+  }
+}
+
+@media screen and (max-width: 515px) {
+  th,
+  td {
+    &:first-child {
+      width: 20%;
+    }
+    &:nth-child(3) {
       width: 15%;
     }
   }
 }
 
-@media screen and (max-width: 620px) {
+@media screen and (max-width: 470px) {
   th,
   td {
-    &:nth-child(6) {
-      display: none;
+    &:first-child {
+      width: 10%;
+    }
+    &:nth-child(2) {
+      width: 6% !important;
     }
   }
 }
