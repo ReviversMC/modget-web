@@ -160,24 +160,28 @@
                   {{ formatTime(modpackage.published) }}
                 </p>
               </div>
-            </div>
+            </div> -->
             <div class="stat">
               <TagIcon />
               <div class="info">
                 <h4>Available For</h4>
                 <p class="value">
-                  {{
-                    versions[0]
-                      ? versions[0].game_versions[0]
-                        ? versions[0].game_versions[
-                            versions[0].game_versions.length - 1
-                          ]
-                        : 'None'
-                      : 'None'
-                  }}
+                  <span v-if="modpackage.featuredVersions.length > 0">
+                    {{
+                      modpackage.featuredVersions[
+                        modpackage.featuredVersions.length - 1
+                      ].minecraftVersions[
+                        modpackage.featuredVersions[
+                          modpackage.featuredVersions.length - 1
+                        ].minecraftVersions.length - 1
+                      ]
+                    }}
+                    -
+                  </span>
+                  {{ modpackage.featuredVersions[0].minecraftVersions[0] }}
                 </p>
               </div>
-            </div> -->
+            </div>
             <!-- <div class="stat">
               <EditIcon /> -->
             <!-- <div class="info">
@@ -455,19 +459,19 @@ export default {
         await data.$axios.get(`package/${data.params.id}`, data.$auth.headers)
       ).data
 
-      // const [members, versions, featuredVersions, userFollows] = (
-      //   await Promise.all([
-      //     data.$axios.get(`team/${modpackage.team}/members`, data.$auth.headers),
-      //     data.$axios.get(`modpackage/${modpackage.packageId}/version`),
-      //     data.$axios.get(`modpackage/${modpackage.packageId}/version?featured=true`),
-      //     data.$axios.get(
-      //       data.$auth.user
-      //         ? `user/${data.$auth.user.id}/follows`
-      //         : `https://api.modrinth.com`,
-      //       data.$auth.headers
-      //     ),
-      //   ])
-      // ).map((it) => it.data)
+      // const [members, versions, userFollows] = (
+      const [versions] = (
+        await Promise.all([
+          // data.$axios.get(`team/${modpackage.team}/members`, data.$auth.headers),
+          data.$axios.get(`package/${modpackage.packageId}/versions`),
+          // data.$axios.get(
+          //   data.$auth.user
+          //     ? `user/${data.$auth.user.id}/follows`
+          //     : `https://api.modrinth.com`,
+          //   data.$auth.headers
+          // ),
+        ])
+      ).map((it) => it.data)
 
       // const users = (
       //   await data.$axios.get(
@@ -493,8 +497,7 @@ export default {
 
       return {
         modpackage,
-        // versions,
-        // featuredVersions,
+        versions,
         // members: members.filter((x) => x.accepted),
         // allMembers: members,
         // currentMember,
@@ -749,7 +752,7 @@ export default {
         margin: 3px;
       }
       .stat {
-        min-width: 8.5rem;
+        min-width: 8.4rem;
         padding: 0.65rem;
         box-sizing: border-box;
         @extend %stat;

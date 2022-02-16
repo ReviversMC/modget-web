@@ -4,73 +4,85 @@
       <thead>
         <tr>
           <th></th>
-          <th>Name</th>
           <th>Version</th>
           <th>Mod Loader</th>
-          <th>Minecraft Version</th>
-          <th>Status</th>
-          <th>Downloads</th>
-          <th>Date Published</th>
+          <th>Minecraft Versions</th>
+          <th>Channel</th>
+          <th>Hoster</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="version in versions" :key="version.id">
+        <tr v-for="version in versions" :key="version.version">
           <td>
-            <a
-              :href="$parent.findPrimary(version).url"
-              class="download"
-              @click.prevent="
-                $parent.downloadFile(
-                  $parent.findPrimary(version).hashes.sha1,
-                  $parent.findPrimary(version).url
-                )
-              "
-            >
+            <a :href="version.downloadPageUrls.modrinth" class="download">
               <DownloadIcon />
             </a>
           </td>
           <td>
             <nuxt-link
               :to="
-                '/mod/' +
-                (mod.slug ? mod.slug : mod.id) +
+                '/package/' +
+                modpackage.packageId +
                 '/version/' +
-                version.id
+                version.version
               "
             >
-              {{ version.name ? version.name : version.version_number }}
+              {{ version.version }}
             </nuxt-link>
           </td>
           <td>
-            <nuxt-link
-              :to="
-                '/mod/' +
-                (mod.slug ? mod.slug : mod.id) +
-                '/version/' +
-                version.id
-              "
+            <FabricIcon v-if="version.loaders.includes('FABRIC')" />
+            <ForgeIcon v-if="version.loaders.includes('FORGE')" />
+          </td>
+          <td>{{ version.minecraftVersions.join(', ') }}</td>
+          <td>
+            <span
+              v-if="version.channel.toLowerCase() === 'release'"
+              class="badge green"
             >
-              {{ version.version_number }}
-            </nuxt-link>
-          </td>
-          <td>
-            <FabricIcon v-if="version.loaders.includes('fabric')" />
-            <ForgeIcon v-if="version.loaders.includes('forge')" />
-          </td>
-          <td>{{ version.game_versions.join(', ') }}</td>
-          <td>
-            <span v-if="version.version_type === 'release'" class="badge green">
               Release
             </span>
-            <span v-if="version.version_type === 'beta'" class="badge yellow">
+            <span
+              v-if="version.channel.toLowerCase() === 'beta'"
+              class="badge yellow"
+            >
               Beta
             </span>
-            <span v-if="version.version_type === 'alpha'" class="badge red">
+            <span
+              v-if="version.channel.toLowerCase() === 'alpha'"
+              class="badge red"
+            >
               Alpha
             </span>
           </td>
-          <td>{{ version.downloads }}</td>
-          <td>{{ $dayjs(version.date_published).format('YYYY-MM-DD') }}</td>
+          <td>
+            <span v-if="version.downloadPageUrls.modrinth">Modrinth</span
+            ><span v-if="version.downloadPageUrls.curseforge"
+              ><span v-if="version.downloadPageUrls.modrinth">,<br /></span>
+              CurseForge</span
+            ><span v-if="version.downloadPageUrls.sourceControl"
+              ><span
+                v-if="
+                  version.downloadPageUrls.modrinth ||
+                  version.downloadPageUrls.curseforge
+                "
+                >,<br />
+              </span>
+              Source Control</span
+            >
+            <span
+              v-for="(downloadPage, index) in version.downloadPageUrls.other"
+              :key="downloadPage.url"
+            >
+              {{ downloadPage.name
+              }}<span v-if="index !== version.downloadPageUrls.other.length - 1"
+                >,</span
+              >
+            </span>
+          </td>
+          <!-- <td>
+            {{ $dayjs(version.date_published).format('YYYY-MM-DD') }}
+          </td> -->
         </tr>
       </tbody>
     </table>
@@ -94,7 +106,7 @@ export default {
   },
   auth: false,
   props: {
-    mod: {
+    modpackage: {
       type: Object,
       default() {
         return {}
@@ -151,8 +163,8 @@ table {
         height: 2.25rem;
         width: 2.25rem;
         border-radius: 2rem;
+        margin: auto;
         background-color: var(--color-button-bg);
-        margin-right: var(--spacing-card-sm);
         &:hover {
           background-color: var(--color-button-bg-hover);
         }
@@ -163,10 +175,16 @@ table {
       }
     }
 
+    // &:first-child {
+    //   width: 6%;
+    // }
     &:nth-child(2),
     &:nth-child(5) {
       padding-left: 0;
       width: 12%;
+    }
+    &:nth-child(3) {
+      width: 10%;
     }
   }
 
@@ -197,37 +215,40 @@ table {
   margin-bottom: var(--spacing-card-md);
 }
 
-@media screen and (max-width: 400px) {
-  th,
-  td {
-    &:nth-child(7) {
-      display: none;
-    }
-  }
-}
+// @media screen and (max-width: 400px) {
+//   th,
+//   td {
+//     &:nth-child(7) {
+//       display: none;
+//     }
+//   }
+// }
 
-@media screen and (max-width: 600px) {
-  th,
-  td {
-    &:nth-child(8) {
-      display: none;
-    }
-  }
-}
+// @media screen and (max-width: 600px) {
+//   th,
+//   td {
+//     &:nth-child(8) {
+//       display: none;
+//     }
+//   }
+// }
 
-@media screen and (max-width: 800px) {
-  th,
-  td {
-    &:nth-child(5) {
-      display: none;
-    }
-  }
-}
-
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 500px) {
   th,
   td {
     &:nth-child(2) {
+      display: none;
+    }
+    &:nth-child(4) {
+      width: 15%;
+    }
+  }
+}
+
+@media screen and (max-width: 620px) {
+  th,
+  td {
+    &:nth-child(6) {
       display: none;
     }
   }
