@@ -250,7 +250,7 @@
                 <span
                   v-for="loader in modpackage.loaders"
                   :key="loader"
-                  v-tooltip="modpackage.loaders"
+                  v-tooltip="loader"
                   class="value ellipsis"
                 >
                   <span
@@ -304,7 +304,7 @@
           <h3>Authors</h3>
           <div
             v-for="author in modpackage.authors"
-            :key="author"
+            :key="author.name"
             class="team-member columns"
           >
             <img
@@ -324,12 +324,20 @@
           <h3>Featured Versions</h3>
           <div
             v-for="version in modpackage.featuredVersions"
-            :key="version.version"
+            :key="version.md5"
             class="featured-version"
           >
-            <a :href="version.downloadPageUrls.modrinth" class="download">
+            <nuxt-link
+              :to="
+                '/package/' +
+                modpackage.packageId +
+                '/version/' +
+                version.version
+              "
+              class="download"
+            >
               <DownloadIcon />
-            </a>
+            </nuxt-link>
             <div class="info">
               <div class="top">
                 <span

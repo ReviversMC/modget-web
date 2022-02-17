@@ -2,6 +2,7 @@
   "prettier.endOfLine": "lf",
   "editor.formatOnSave": true,
   "cSpell.words": [
+    "axios",
     "minecraft",
     "nuxt",
     "optifine"

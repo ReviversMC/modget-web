@@ -18,24 +18,30 @@
     />
     <div class="version">
       <div class="version-header">
-        <h4>{{ version.name }}</h4>
-        <span v-if="version.version_type === 'release'" class="badge green">
+        <h4>{{ modpackage.name }} {{ version.version }}</h4>
+        <span
+          v-if="version.channel.toLowerCase() === 'release'"
+          class="badge green"
+        >
           Release
         </span>
-        <span v-if="version.version_type === 'beta'" class="badge yellow">
+        <span
+          v-if="version.channel.toLowerCase() === 'beta'"
+          class="badge yellow"
+        >
           Beta
         </span>
-        <span v-if="version.version_type === 'alpha'" class="badge red">
+        <span
+          v-if="version.channel.toLowerCase() === 'alpha'"
+          class="badge red"
+        >
           Alpha
-        </span>
-        <span>
-          {{ version.version_number }}
         </span>
         <Categories :categories="version.loaders" />
         <div class="buttons">
           <nuxt-link
             v-if="this.$auth.user"
-            :to="`/report/create?id=${version.id}&t=version`"
+            :to="`/report/create?id=${version.version}&t=version`"
             class="action iconified-button"
           >
             <ReportIcon />
@@ -57,28 +63,17 @@
             <EditIcon />
             Edit
           </nuxt-link>
-          <a
-            v-if="primaryFile"
-            :href="primaryFile.url"
-            class="action iconified-button download"
-            @click.prevent="
-              $parent.downloadFile(primaryFile.hashes.sha1, primaryFile.url)
-            "
-          >
-            <DownloadIcon />
-            Download
-          </a>
         </div>
       </div>
       <div class="stats">
-        <div class="stat">
+        <!-- <div class="stat">
           <DownloadIcon />
           <div class="info">
             <h4>Downloads</h4>
             <p class="value">{{ version.downloads }}</p>
           </div>
-        </div>
-        <div class="stat">
+        </div> -->
+        <!-- <div class="stat">
           <CalendarIcon />
           <div class="info">
             <h4>Created</h4>
@@ -93,15 +88,53 @@
               {{ $dayjs(version.date_published).fromNow() }}
             </p>
           </div>
-        </div>
+        </div> -->
         <div class="stat">
           <TagIcon />
           <div class="info">
             <h4>Available for</h4>
             <p class="value">
               {{
-                version.game_versions ? version.game_versions.join(', ') : ''
+                version.minecraftVersions
+                  ? version.minecraftVersions.join(', ')
+                  : ''
               }}
+            </p>
+          </div>
+        </div>
+        <div v-if="version.environment.client" class="stat">
+          <ClientIcon />
+          <div class="info">
+            <h4>Client Side</h4>
+            <p class="value capitalize">
+              {{ version.environment.client.toLowerCase() }}
+            </p>
+          </div>
+        </div>
+        <div v-if="version.environment.server" class="stat">
+          <ServerIcon />
+          <div class="info">
+            <h4>Server Side</h4>
+            <p class="value capitalize">
+              {{ version.environment.server.toLowerCase() }}
+            </p>
+          </div>
+        </div>
+        <div class="stat">
+          <FileTextIcon />
+          <div class="info">
+            <h4>License</h4>
+            <p v-tooltip="version.license" class="value ellipsis">
+              {{ version.license.toUpperCase() }}
+            </p>
+          </div>
+        </div>
+        <div class="stat">
+          <StorageCategory />
+          <div class="info">
+            <h4>File Type</h4>
+            <p v-tooltip="version.fileType" class="value ellipsis">
+              {{ version.fileType.toUpperCase() }}
             </p>
           </div>
         </div>
@@ -111,25 +144,66 @@
         class="markdown-body"
       ></div>
       <div class="files">
-        <div v-for="file in version.files" :key="file.hashes.sha1" class="file">
+        <div v-if="version.downloadPageUrls.modrinth" class="file">
           <div class="text-wrapper">
-            <p>{{ file.filename }}</p>
+            <p>Modrinth</p>
             <div v-if="currentMember" class="actions">
               <button @click="deleteFilePopup(file.hashes.sha1)">
                 Delete file
               </button>
-              <button @click="makePrimary(file.hashes.sha1)">
-                Make primary
-              </button>
             </div>
           </div>
-          <a
-            :href="file.url"
-            @click.prevent="$parent.downloadFile(file.hashes.sha1, file.url)"
-          >
+          <a target="_blank" :href="version.downloadPageUrls.modrinth">
             <DownloadIcon />
           </a>
         </div>
+        <div v-if="version.downloadPageUrls.curseforge" class="file">
+          <div class="text-wrapper">
+            <p>CurseForge</p>
+            <div v-if="currentMember" class="actions">
+              <button @click="deleteFilePopup(file.hashes.sha1)">
+                Delete file
+              </button>
+            </div>
+          </div>
+          <a target="_blank" :href="version.downloadPageUrls.curseforge">
+            <DownloadIcon />
+          </a>
+        </div>
+        <div v-if="version.downloadPageUrls.sourceControl" class="file">
+          <div class="text-wrapper">
+            <p>Source Control</p>
+            <div v-if="currentMember" class="actions">
+              <button @click="deleteFilePopup(file.hashes.sha1)">
+                Delete file
+              </button>
+            </div>
+          </div>
+          <a target="_blank" :href="version.downloadPageUrls.sourceControl">
+            <DownloadIcon />
+          </a>
+        </div>
+        <div
+          v-for="downloadPageUrl in version.downloadPageUrlsWithOnlyNamesAndUrls"
+          :key="downloadPageUrl.url"
+          class="file"
+        >
+          <div class="text-wrapper">
+            <p>{{ downloadPageUrl.name }}</p>
+            <div v-if="currentMember" class="actions">
+              <button @click="deleteFilePopup(file.hashes.sha1)">
+                Delete file
+              </button>
+            </div>
+          </div>
+          <a :href="downloadPageUrl.url">
+            <DownloadIcon />
+          </a>
+        </div>
+      </div>
+      <div style="margin-top: 1.2rem">
+        <span style="font-weight: var(--font-weight-bold)">MD5</span>:
+        {{ version.md5 }}
       </div>
       <FileInput
         v-if="currentMember"
@@ -149,8 +223,12 @@ import Categories from '~/components/ui/search/Categories'
 import FileInput from '~/components/ui/FileInput'
 import TrashIcon from '~/assets/images/utils/trash.svg?inline'
 import EditIcon from '~/assets/images/utils/edit.svg?inline'
+import ClientIcon from '~/assets/images/utils/client.svg?inline'
+import ServerIcon from '~/assets/images/utils/server.svg?inline'
+import FileTextIcon from '~/assets/images/utils/file-text.svg?inline'
+import StorageCategory from '~/assets/images/categories/storage.svg?inline'
 import DownloadIcon from '~/assets/images/utils/download.svg?inline'
-import CalendarIcon from '~/assets/images/utils/calendar.svg?inline'
+// import CalendarIcon from '~/assets/images/utils/calendar.svg?inline'
 import TagIcon from '~/assets/images/utils/tag.svg?inline'
 import ReportIcon from '~/assets/images/utils/report.svg?inline'
 
@@ -159,7 +237,11 @@ export default {
     FileInput,
     Categories,
     DownloadIcon,
-    CalendarIcon,
+    ClientIcon,
+    ServerIcon,
+    FileTextIcon,
+    StorageCategory,
+    // CalendarIcon,
     TagIcon,
     TrashIcon,
     EditIcon,
@@ -168,7 +250,7 @@ export default {
   },
   auth: false,
   props: {
-    mod: {
+    modpackage: {
       type: Object,
       default() {
         return {}
@@ -193,35 +275,22 @@ export default {
       },
     },
   },
-  async fetch() {
-    this.version = this.versions.find(
-      (x) => x.id === this.$route.params.version
-    )
-
-    this.primaryFile = this.version.files.find((file) => file.primary)
-
-    if (!this.primaryFile) {
-      this.primaryFile = this.version.files[0]
-    }
-
-    if (!this.version.changelog && this.version.changelog_url) {
-      this.version.changelog = (
-        await this.$axios.get(this.version.changelog_url)
-      ).data
-    }
-  },
   data() {
     return {
-      primaryFile: {},
-      version: {},
       filesToUpload: [],
       popup_data: null,
     }
   },
+  computed: {
+    version() {
+      this.versions.find(
+        (x) => x.version === this.$route.params.version
+      )
+  },
   mounted() {
     this.$emit('update:link-bar', [
       ['Versions', 'versions'],
-      [this.version.name, 'version/' + this.version.id],
+      [this.version.version, 'version/' + this.version.version],
     ])
   },
   methods: {
@@ -233,20 +302,6 @@ export default {
       this.$nuxt.$loading.start()
 
       await this.$axios.delete(`version_file/${hash}`, this.$auth.headers)
-
-      await this.$router.go(null)
-      this.$nuxt.$loading.finish()
-    },
-    async makePrimary(hash) {
-      this.$nuxt.$loading.start()
-
-      await this.$axios.patch(
-        `version/${this.version.id}`,
-        {
-          primary_file: ['sha1', hash],
-        },
-        this.$auth.headers
-      )
 
       await this.$router.go(null)
       this.$nuxt.$loading.finish()
@@ -274,7 +329,7 @@ export default {
 
       try {
         await this.$axios({
-          url: `version/${this.version.id}/file`,
+          url: `version/${this.version.version}/file`,
           method: 'POST',
           data: formData,
           headers: {
@@ -302,9 +357,12 @@ export default {
     async deleteVersion() {
       this.$nuxt.$loading.start()
 
-      await this.$axios.delete(`version/${this.version.id}`, this.$auth.headers)
+      await this.$axios.delete(
+        `version/${this.version.version}`,
+        this.$auth.headers
+      )
 
-      await this.$router.replace(`/mod/${this.mod.id}`)
+      await this.$router.replace(`/package/${this.modpackage.packageId}`)
       this.$nuxt.$loading.finish()
     },
   },
@@ -354,6 +412,7 @@ export default {
   }
 
   .files {
+    margin-top: 1.3rem;
     display: flex;
 
     .file {
@@ -415,13 +474,15 @@ export default {
 .stats {
   display: flex;
   flex-wrap: wrap;
-  margin: 0.5rem 0;
+  margin: 1rem 0;
   .stat {
     margin-right: 0.75rem;
     @extend %stat;
 
     svg {
       padding: 0.25rem;
+      border-radius: 50%;
+      background-color: var(--color-button-bg);
     }
   }
 }
