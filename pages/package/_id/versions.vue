@@ -56,10 +56,13 @@
             </span>
           </td>
           <td>
-            <span v-if="version.downloadPageUrls.modrinth">Modrinth</span
+            <span v-if="version.downloadPageUrls.modrinth"
+              ><a :href="version.downloadPageUrls.modrinth">Modrinth</a></span
             ><span v-if="version.downloadPageUrls.curseforge"
               ><span v-if="version.downloadPageUrls.modrinth">,<br /></span>
-              CurseForge</span
+              <a :href="version.downloadPageUrls.curseforge">
+                CurseForge</a
+              ></span
             ><span v-if="version.downloadPageUrls.sourceControl"
               ><span
                 v-if="
@@ -68,16 +71,21 @@
                 "
                 >,<br />
               </span>
-              Source Control</span
+              <a :href="version.downloadPageUrls.sourceControl">
+                Source Control</a
+              ></span
             >
             <span
               v-for="(downloadPage, index) in version.downloadPageUrls.other"
               :key="downloadPage.url"
             >
-              {{ downloadPage.name
-              }}<span v-if="index !== version.downloadPageUrls.other.length - 1"
-                >,</span
-              >
+              <a :href="downloadPage.url">
+                {{ downloadPage.name
+                }}<span
+                  v-if="index !== version.downloadPageUrls.other.length - 1"
+                  >,</span
+                >
+              </a>
             </span>
           </td>
           <!-- <td>
@@ -154,11 +162,6 @@ table {
 
   th,
   td {
-    > a {
-      display: inline-block;
-      width: 100%;
-      padding: 15px 0px;
-    }
     // &:first-child {
     //   text-align: center;
     //   width: 7%;
@@ -180,8 +183,16 @@ table {
     //   }
     // }
 
-    &:first-child > * {
-      margin-left: 5%;
+    &:first-child {
+      > * {
+        margin-left: 5%;
+      }
+
+      > a {
+        display: inline-block;
+        width: 100%;
+        padding: 15px 0px;
+      }
     }
     &:nth-child(2),
     &:nth-child(4) {
