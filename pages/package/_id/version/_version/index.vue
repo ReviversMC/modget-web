@@ -283,9 +283,8 @@ export default {
   },
   computed: {
     version() {
-      this.versions.find(
-        (x) => x.version === this.$route.params.version
-      )
+      return this.versions.find((x) => x.version === this.$route.params.version)
+    },
   },
   mounted() {
     this.$emit('update:link-bar', [
