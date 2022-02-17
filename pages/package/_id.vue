@@ -78,6 +78,15 @@
               <span>Versions</span>
             </nuxt-link>
             <a
+              v-if="modpackage.home"
+              :href="modpackage.home"
+              target="_blank"
+              class="tab"
+            >
+              <ExternalIcon />
+              <span>Home</span>
+            </a>
+            <a
               v-if="modpackage.wiki"
               :href="modpackage.wiki"
               target="_blank"
