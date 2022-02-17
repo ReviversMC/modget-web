@@ -236,7 +236,7 @@
               <TagIcon />
               <div class="info">
                 <h4>Status</h4>
-                <p v-tooltip="modpackage.status" class="value ellipsis">
+                <p class="value ellipsis">
                   {{ modpackage.status.toLowerCase() }}
                 </p>
               </div>
@@ -250,7 +250,6 @@
                 <span
                   v-for="loader in modpackage.loaders"
                   :key="loader"
-                  v-tooltip="loader"
                   class="value ellipsis"
                 >
                   <span
@@ -274,7 +273,6 @@
                 <span
                   v-for="name in modpackage.alternativeNames"
                   :key="name"
-                  v-tooltip="modpackage.alternativeNames"
                   class="value ellipsis"
                 >
                   <span

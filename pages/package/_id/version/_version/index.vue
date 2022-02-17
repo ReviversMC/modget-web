@@ -124,7 +124,7 @@
           <FileTextIcon />
           <div class="info">
             <h4>License</h4>
-            <p v-tooltip="version.license" class="value ellipsis">
+            <p class="value ellipsis">
               {{ version.license.toUpperCase() }}
             </p>
           </div>
@@ -133,7 +133,7 @@
           <StorageCategory />
           <div class="info">
             <h4>File Type</h4>
-            <p v-tooltip="version.fileType" class="value ellipsis">
+            <p class="value ellipsis">
               {{ version.fileType.toUpperCase() }}
             </p>
           </div>
