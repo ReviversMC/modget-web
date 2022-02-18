@@ -368,19 +368,20 @@ export default {
   },
   fetchOnServer: false,
   async fetch() {
-    if (this.$route.query.q) this.query = this.$route.query.q
-    if (this.$route.query.f) {
-      const facets = this.$route.query.f.split(',')
+    if (this.$route.query.query) this.query = this.$route.query.query
+    if (this.$route.query.facets) {
+      const facets = this.$route.query.facets.split(',')
 
       for (const facet of facets) await this.toggleFacet(facet, false)
     }
-    if (this.$route.query.v)
-      this.selectedVersions = this.$route.query.v.split(',')
-    if (this.$route.query.h) this.showSnapshots = this.$route.query.h === 'true'
-    if (this.$route.query.e)
-      this.selectedEnvironments = this.$route.query.e.split(',')
-    if (this.$route.query.s) {
-      this.sortType.name = this.$route.query.s
+    if (this.$route.query.mcversion)
+      this.selectedVersions = this.$route.query.mcversion.split(',')
+    if (this.$route.query.snapshots)
+      this.showSnapshots = this.$route.query.snapshots === 'true'
+    if (this.$route.query.environment)
+      this.selectedEnvironments = this.$route.query.environment.split(',')
+    if (this.$route.query.sort) {
+      this.sortType.name = this.$route.query.sort
 
       switch (this.sortType.name) {
         case 'relevance':
@@ -400,11 +401,11 @@ export default {
           break
       }
     }
-    if (this.$route.query.m) {
-      this.maxResults = this.$route.query.m
+    if (this.$route.query.environmentntriesPerPage) {
+      this.maxResults = this.$route.query.environmentntriesPerPage
     }
-    if (this.$route.query.o)
-      this.currentPage = Math.ceil(this.$route.query.o / this.maxResults) + 1
+    if (this.$route.query.page)
+      this.currentPage = Math.ceil(this.$route.query.page / this.maxResults) + 1
 
     await Promise.all([
       this.fillVersions(),
