@@ -12,7 +12,7 @@ export default {
     htmlAttrs: {
       lang: 'en',
     },
-    title: 'Modrinth',
+    title: 'Modget Web Portal',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -20,38 +20,46 @@ export default {
         hid: 'description',
         name: 'description',
         content:
-          'Modrinth is a mod distribution platform. Modrinth is modern, easy to use, and built for modders. Modrinth currently supports Minecraft, including Forge and Fabric mod loaders.',
+          'Modget is a mod package manager for Minecraft. Here in our web portal you can view metadata and add/update packages!',
       },
 
-      { hid: 'publisher', name: 'publisher', content: 'Guavy LLC' },
+      { hid: 'publisher', name: 'publisher', content: 'ReviversMC' },
       {
         hid: 'apple-mobile-web-app-title',
         name: 'apple-mobile-web-app-title',
-        content: 'Modrinth',
+        content: 'Modget Web Portal',
       },
       { hid: 'theme-color', name: 'theme-color', content: '#4d9227' },
       { hid: 'color-scheme', name: 'color-scheme', content: 'light dark' },
 
-      { hid: 'og:site_name', name: 'og:site_name', content: 'Modrinth' },
+      {
+        hid: 'og:site_name',
+        name: 'og:site_name',
+        content: 'Modget Web Portal',
+      },
       {
         hid: 'og:description',
         name: 'og:description',
-        content: 'An open source modding platform',
+        content: 'The mod package manager for Minecraft',
       },
       {
         hid: 'og:title',
         name: 'og:title',
-        content: 'Modrinth',
+        content: 'Modget Web Portal',
       },
       { hid: 'og:type', name: 'og:type', content: 'website' },
-      { hid: 'og:url', name: 'og:url', content: 'https://www.modrinth.com' },
+      {
+        hid: 'og:url',
+        name: 'og:url',
+        content: 'https://modget.nebelnidas.net',
+      },
       {
         hid: 'og:image',
         name: 'og:image',
-        content: 'https://cdn.modrinth.com/modrinth.png',
+        content: 'https://cdn.modrinth.com/data/2NpFE0R3/icon.png',
       },
-      { hid: 'twitter:card', name: 'twitter:card', content: 'summary' },
-      { hid: 'twitter:site', name: 'twitter:site', content: '@modrinth' },
+      // { hid: 'twitter:card', name: 'twitter:card', content: 'summary' },
+      // { hid: 'twitter:site', name: 'twitter:site', content: '@modrinth' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -123,9 +131,9 @@ export default {
     ghostMode: true,
     geoEdgeId: '',
   },
-  robots: {
-    Sitemap: 'https://modrinth.com/sitemap.xml',
-  },
+  // robots: {
+  //   Sitemap: 'https://modrinth.com/sitemap.xml',
+  // },
   sitemap: {
     exclude: ['/dashboard/**', '/dashboard', '/mod/create'],
   },
@@ -201,7 +209,7 @@ function getDomain() {
     } else if (process.env.VERCEL_URL) {
       return `https://${process.env.VERCEL_URL}`
     } else {
-      return 'https://modrinth.com'
+      return 'https://modget.nebelnidas.net'
     }
   } else {
     return 'http://localhost:3000'

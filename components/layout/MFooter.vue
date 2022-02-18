@@ -1,8 +1,9 @@
 <template>
   <footer :class="{ centered, padded, hideBig, hideSmall }">
     <span>
-      Modrinth is open source software. You may view the source code at
-      <a target="_blank" href="https://github.com/modrinth">our GitHub page</a>.
+      Modget is open source software. You may view the source code at
+      <a target="_blank" href="https://github.com/ReviversMC">our GitHub page</a
+      >.
     </span>
     <ul>
       <li>
@@ -24,22 +25,22 @@
       </li>
     </ul>
     <ul>
-      <li>
+      <!-- <li>
         <a target="_blank" href="https://blog.modrinth.com">Blog</a>
-      </li>
+      </li> -->
       <li>
-        <a target="_blank" href="https://discord.gg/gFRbNQ2">Discord</a>
+        <a target="_blank" href="https://discord.gg/6bTGYFppfz">Discord</a>
       </li>
-      <li>
+      <!-- <li>
         <a target="_blank" href="https://twitter.com/modrinth">Twitter</a>
-      </li>
+      </li> -->
     </ul>
     <ul>
       <li>
         <nuxt-link to="/dashboard/privacy">Change privacy settings</nuxt-link>
       </li>
     </ul>
-    <span> © Guavy LLC </span><br />
+    <span> © ReviversMC </span><br />
     <span v-if="version !== 'unknown'">Version: {{ version }}</span>
   </footer>
 </template>
