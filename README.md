@@ -1,7 +1,22 @@
-![knossos banner](https://user-images.githubusercontent.com/12068027/100479893-d9b5a380-30ac-11eb-9db9-0c09d400f13f.png)
+## Modget Web
 
-## Modrinth's center for its frontend service
+Modget's web portal for browsing mods, viewing metadata and adding/updating packages.
 
-For contributing information, please see the knossos section of the [Modrinth contributing guide](https://docs.modrinth.com/docs/details/contributing/#knossos-frontend).
+## Build Setup
 
-For a detailed explanation on how things work in general, check out the [Nuxt.js docs](https://nuxtjs.org).
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:3000
+npm run dev
+
+# build for production and launch server
+npm run build
+npm start
+
+# generate static project
+npm run generate
+```
+
+For detailed explanation on how things work, check out the [Nuxt.js docs](https://nuxtjs.org/docs).
