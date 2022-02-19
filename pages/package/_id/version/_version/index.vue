@@ -472,13 +472,12 @@ export default {
 }
 
 .stats {
-  margin: 1rem 0;
   display: flex;
   flex-wrap: wrap;
-  column-gap: 1rem;
-  row-gap: 0.6rem;
+  margin: 1rem 0;
 
   .stat {
+    padding: 0.3rem 0.4rem 0.4rem 0rem;
     box-sizing: border-box;
     @extend %stat;
 
