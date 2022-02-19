@@ -202,7 +202,7 @@
         </div>
       </div>
       <div style="margin-top: 1.2rem">
-        <span style="font-weight: var(--font-weight-bold)">MD5</span>:
+        <span style="font-weight: var(--font-weight-bold)">MD5:</span>
         {{ version.md5 }}
       </div>
       <FileInput
