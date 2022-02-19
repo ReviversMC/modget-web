@@ -228,43 +228,105 @@
         <h4>Related Packages</h4>
       </div>
       <div class="related-packages">
-        <div v-for="pack in version.depends" :key="pack.packageId">
-          <nuxt-link :to="`/package/${pack.packageId}`">
-            {{ pack.packageId }}
-          </nuxt-link>
-          <span v-if="pack.version !== '*'">(version {{ pack.version }})</span>
-          is required
-        </div>
-        <div v-for="pack in version.breaks" :key="pack.packageId">
-          <nuxt-link :to="`/package/${pack.packageId}`">
-            {{ pack.packageId }}
-          </nuxt-link>
-          (<span v-if="pack.version === '*'">all versions</span>
-          <span v-else>version {{ pack.version }}</span
-          >) is incompatible
-        </div>
-        <div v-for="pack in version.conflicts" :key="pack.packageId">
-          <nuxt-link :to="`/package/${pack.packageId}`">
-            {{ pack.packageId }}
-          </nuxt-link>
-          (<span v-if="pack.version === '*'">all versions</span>
-          <span v-else>version {{ pack.version }}</span
-          >) conflicts with this package
-        </div>
-        <div v-for="pack in version.recommends" :key="pack.packageId">
-          <nuxt-link :to="`/package/${pack.packageId}`">
-            {{ pack.packageId }}
-          </nuxt-link>
-          <span v-if="pack.version !== '*'">(version {{ pack.version }})</span>
-          is recommended
-        </div>
-        <div v-for="pack in version.bundles" :key="pack.packageId">
-          <nuxt-link :to="`/package/${pack.packageId}`">
-            {{ pack.packageId }}
-          </nuxt-link>
-          <span v-if="pack.version !== '*'">(version {{ pack.version }})</span>
-          is bundled
-        </div>
+        <nuxt-link
+          v-for="pack in version.depends"
+          :key="pack.packageId"
+          :to="`/package/${pack.packageId}`"
+          class="team-member columns"
+        >
+          <img
+            :src="
+              pack.iconUrl
+                ? pack.iconUrl
+                : 'https://cdn.modrinth.com/placeholder.svg?inline'
+            "
+            alt="package logo"
+          />
+          <div class="related-package__info">
+            <h4>{{ pack.packageId }}</h4>
+            <span v-if="pack.version !== '*'">version {{ pack.version }}</span>
+            is required
+          </div>
+        </nuxt-link>
+        <nuxt-link
+          v-for="pack in version.breaks"
+          :key="pack.packageId"
+          :to="`/package/${pack.packageId}`"
+          class="team-member columns"
+        >
+          <img
+            :src="
+              pack.iconUrl
+                ? pack.iconUrl
+                : 'https://cdn.modrinth.com/placeholder.svg?inline'
+            "
+            alt="package logo"
+          />
+          <div class="related-package__info">
+            <h4>{{ pack.packageId }}</h4>
+            <span v-if="pack.version !== '*'">version {{ pack.version }}</span>
+            is incompatible
+          </div>
+        </nuxt-link>
+        <nuxt-link
+          v-for="pack in version.conflicts"
+          :key="pack.packageId"
+          :to="`/package/${pack.packageId}`"
+          class="team-member columns"
+        >
+          <img
+            :src="
+              pack.iconUrl
+                ? pack.iconUrl
+                : 'https://cdn.modrinth.com/placeholder.svg?inline'
+            "
+            alt="package logo"
+          />
+          <div class="related-package__info">
+            <h4>{{ pack.packageId }}</h4>
+            <span v-if="pack.version !== '*'">version {{ pack.version }}</span>
+            conflicts with this version
+          </div>
+        </nuxt-link>
+        <nuxt-link
+          v-for="pack in version.recommends"
+          :key="pack.packageId"
+          :to="`/package/${pack.packageId}`"
+          class="team-member columns"
+        >
+          <img
+            :src="
+              pack.iconUrl
+                ? pack.iconUrl
+                : 'https://cdn.modrinth.com/placeholder.svg?inline'
+            "
+            alt="package logo"
+          />
+          <div class="related-package__info">
+            <h4>{{ pack.packageId }}</h4>
+            <span v-if="pack.version !== '*'">version {{ pack.version }}</span>
+            is recommended
+          </div>
+        </nuxt-link>
+        <nuxt-link
+          v-for="pack in version.bundles"
+          :key="pack.packageId"
+          :to="`/package/${pack.packageId}`"
+          class="team-member columns"
+        >
+          <img
+            :src="
+              pack.iconUrl
+                ? pack.iconUrl
+                : 'https://cdn.modrinth.com/placeholder.svg?inline'
+            "
+            alt="package logo"
+          />
+          <div class="related-package__info">
+            <h4>{{ pack.packageId }}</h4>
+            version {{ pack.version }} is bundled
+          </div>
+        </nuxt-link>
       </div>
     </div>
   </div>
@@ -549,6 +611,26 @@ export default {
 .related-packages {
   > * {
     margin: 1rem 0 0 0;
+  }
+
+  .team-member {
+    margin-left: 5px;
+    margin-bottom: 5px;
+
+    img {
+      border-radius: var(--size-rounded-icon);
+      height: 50px;
+      width: 50px;
+    }
+    .related-package__info {
+      margin: auto 0.6rem;
+      h4 {
+        // font-weight: normal;
+        margin: 0;
+        margin-top: -0.2rem;
+        margin-bottom: 0.2rem;
+      }
+    }
   }
 }
 </style>
