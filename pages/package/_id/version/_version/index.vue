@@ -413,10 +413,11 @@ export default {
   .files {
     margin-top: 1.3rem;
     display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
 
     .file {
       display: flex;
-      margin-right: 0.5rem;
       border-radius: var(--size-rounded-control);
       border: 1px solid var(--color-divider);
 
@@ -476,7 +477,7 @@ export default {
   margin: 1rem 0;
 
   .stat {
-    padding: 0.4rem 0.4rem 0.4rem 0rem;
+    padding: 0.3rem 0.4rem 0.4rem 0rem;
     box-sizing: border-box;
     @extend %stat;
 
