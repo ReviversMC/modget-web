@@ -16,8 +16,8 @@
       proceed-label="Delete version"
       @proceed="deleteVersion()"
     />
-    <div class="version">
-      <div class="version-header">
+    <div class="section">
+      <div class="header">
         <h4>{{ modpackage.name }} {{ version.version }}</h4>
         <span
           v-if="version.channel.toLowerCase() === 'release'"
@@ -214,6 +214,59 @@
         @change="addFiles"
       />
     </div>
+    <div
+      v-if="
+        version.depends[0] ||
+        version.bundles[0] ||
+        version.breaks[0] ||
+        version.conflicts[0] ||
+        version.recommends[0]
+      "
+      class="section"
+    >
+      <div class="header">
+        <h4>Related Packages</h4>
+      </div>
+      <div class="related-packages">
+        <div v-for="pack in version.depends" :key="pack.packageId">
+          <nuxt-link :to="`/package/${pack.packageId}`">
+            {{ pack.packageId }}
+          </nuxt-link>
+          <span v-if="pack.version !== '*'">(version {{ pack.version }})</span>
+          is required
+        </div>
+        <div v-for="pack in version.breaks" :key="pack.packageId">
+          <nuxt-link :to="`/package/${pack.packageId}`">
+            {{ pack.packageId }}
+          </nuxt-link>
+          (<span v-if="pack.version === '*'">all versions</span>
+          <span v-else>version {{ pack.version }}</span
+          >) is incompatible
+        </div>
+        <div v-for="pack in version.conflicts" :key="pack.packageId">
+          <nuxt-link :to="`/package/${pack.packageId}`">
+            {{ pack.packageId }}
+          </nuxt-link>
+          (<span v-if="pack.version === '*'">all versions</span>
+          <span v-else>version {{ pack.version }}</span
+          >) conflicts with this package
+        </div>
+        <div v-for="pack in version.recommends" :key="pack.packageId">
+          <nuxt-link :to="`/package/${pack.packageId}`">
+            {{ pack.packageId }}
+          </nuxt-link>
+          <span v-if="pack.version !== '*'">(version {{ pack.version }})</span>
+          is recommended
+        </div>
+        <div v-for="pack in version.bundles" :key="pack.packageId">
+          <nuxt-link :to="`/package/${pack.packageId}`">
+            {{ pack.packageId }}
+          </nuxt-link>
+          <span v-if="pack.version !== '*'">(version {{ pack.version }})</span>
+          is bundled
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -369,13 +422,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.version {
+.section {
   margin-bottom: var(--spacing-card-md);
   background: var(--color-raised-bg);
   border-radius: var(--size-rounded-card);
   padding: 1rem;
 
-  .version-header {
+  .header {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -491,5 +544,11 @@ export default {
 
 .file-input {
   margin-top: 1rem;
+}
+
+.related-packages {
+  > * {
+    margin: 1rem 0 0 0;
+  }
 }
 </style>
