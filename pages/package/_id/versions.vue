@@ -8,7 +8,7 @@
           <th><span>Mod Loader</span></th>
           <th><span>Minecraft Versions</span></th>
           <th><span>Channel</span></th>
-          <th><span>Hoster</span></th>
+          <th><span>Origin</span></th>
         </tr>
       </thead>
       <tbody>
@@ -56,36 +56,26 @@
             </span>
           </td>
           <td>
-            <span v-if="version.downloadPageUrls.modrinth"
-              ><a :href="version.downloadPageUrls.modrinth">Modrinth</a></span
+            <span v-if="version.downloadPageUrls.modrinth">Modrinth</span
             ><span v-if="version.downloadPageUrls.curseforge"
-              ><span v-if="version.downloadPageUrls.modrinth">,<br /></span>
-              <a :href="version.downloadPageUrls.curseforge">
-                CurseForge</a
-              ></span
+              ><span v-if="version.downloadPageUrls.modrinth">,<br /></span
+              >CurseForge</span
             ><span v-if="version.downloadPageUrls.sourceControl"
               ><span
                 v-if="
                   version.downloadPageUrls.modrinth ||
                   version.downloadPageUrls.curseforge
                 "
-                >,<br />
-              </span>
-              <a :href="version.downloadPageUrls.sourceControl">
-                Source Control</a
-              ></span
+                >,<br /> </span
+              >Source Control</span
             >
             <span
               v-for="(downloadPage, index) in version.downloadPageUrls.other"
               :key="downloadPage.url"
-            >
-              <a :href="downloadPage.url">
-                {{ downloadPage.name
-                }}<span
-                  v-if="index !== version.downloadPageUrls.other.length - 1"
-                  >,</span
-                >
-              </a>
+              >{{ downloadPage.name
+              }}<span v-if="index !== version.downloadPageUrls.other.length - 1"
+                >,</span
+              >
             </span>
           </td>
           <!-- <td>
