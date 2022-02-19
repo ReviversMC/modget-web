@@ -759,6 +759,9 @@ export default {
     .modpackage-stats__info {
       display: flex;
       flex-wrap: wrap;
+      padding: 0.65rem;
+      row-gap: 1.3rem;
+      justify-content: space-between;
       p {
         // max-width: 6rem;
         overflow: hidden;
@@ -768,7 +771,6 @@ export default {
       }
       .stat {
         min-width: 8.4rem;
-        padding: 0.65rem;
         box-sizing: border-box;
         @extend %stat;
 
