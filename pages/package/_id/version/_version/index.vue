@@ -528,7 +528,7 @@ export default {
   .files {
     margin-top: 1.3rem;
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
     flex-wrap: wrap;
 
     .file {
