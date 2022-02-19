@@ -89,19 +89,6 @@
             </p>
           </div>
         </div> -->
-        <div class="stat">
-          <TagIcon />
-          <div class="info">
-            <h4>Available for</h4>
-            <p class="value">
-              {{
-                version.minecraftVersions
-                  ? version.minecraftVersions.join(', ')
-                  : ''
-              }}
-            </p>
-          </div>
-        </div>
         <div v-if="version.environment.client" class="stat">
           <ClientIcon />
           <div class="info">
@@ -135,6 +122,19 @@
             <h4>File Type</h4>
             <p class="value ellipsis">
               {{ version.fileType.toUpperCase() }}
+            </p>
+          </div>
+        </div>
+        <div class="stat">
+          <TagIcon />
+          <div class="info">
+            <h4>Available for</h4>
+            <p class="value">
+              {{
+                version.minecraftVersions
+                  ? version.minecraftVersions.join(', ')
+                  : ''
+              }}
             </p>
           </div>
         </div>
