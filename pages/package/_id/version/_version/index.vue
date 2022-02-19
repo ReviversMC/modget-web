@@ -474,8 +474,10 @@ export default {
   display: flex;
   flex-wrap: wrap;
   margin: 1rem 0;
+
   .stat {
-    margin-right: 0.75rem;
+    padding: 0.4rem 0.4rem 0.4rem 0rem;
+    box-sizing: border-box;
     @extend %stat;
 
     svg {
