@@ -71,21 +71,20 @@
           <div v-else>
             <SearchResult
               v-for="(result, index) in results"
-              :id="result.slug ? result.slug : result.mod_id.split('-')[1]"
-              :key="result.mod_id"
-              :author="result.author"
-              :name="result.title"
+              :id="result.packageId"
+              :key="result.packageId"
+              :author="result.publisher"
+              :name="result.name"
               :description="result.description"
               :latest-version="result.latest_version"
               :created-at="result.date_created"
               :updated-at="result.date_modified"
-              :downloads="result.downloads.toString()"
-              :icon-url="result.icon_url"
+              downloads="100"
+              :icon-url="result.iconUrls[0]"
               :author-url="result.author_url"
               :page-url="result.page_url"
               :categories="result.categories"
               :is-ad="index === -1"
-              :is-modrinth="result.host === 'modrinth'"
             />
             <div v-if="results.length === 0" class="no-results">
               <p>No results found for your query!</p>
@@ -270,7 +269,7 @@
               @input="reloadVersions"
             />
           </section>
-          <Multiselect
+          <!-- <Multiselect
             v-model="selectedVersions"
             :options="versions"
             :loading="versions.length === 0"
@@ -298,7 +297,7 @@
             :show-labels="false"
             :allow-empty="true"
             @input="toggleLicense"
-          />
+          /> -->
         </div>
         <m-footer class="footer" hide-small />
       </section>
@@ -368,18 +367,25 @@ export default {
   },
   fetchOnServer: false,
   async fetch() {
-    if (this.$route.query.query) this.query = this.$route.query.query
+    if (this.$route.query.query) {
+      this.query = this.$route.query.query
+    }
     if (this.$route.query.facets) {
       const facets = this.$route.query.facets.split(',')
 
-      for (const facet of facets) await this.toggleFacet(facet, false)
+      for (const facet of facets) {
+        await this.toggleFacet(facet, false)
+      }
     }
-    if (this.$route.query.mcversion)
+    if (this.$route.query.mcversion) {
       this.selectedVersions = this.$route.query.mcversion.split(',')
-    if (this.$route.query.snapshots)
+    }
+    if (this.$route.query.snapshots) {
       this.showSnapshots = this.$route.query.snapshots === 'true'
-    if (this.$route.query.environment)
+    }
+    if (this.$route.query.environment) {
       this.selectedEnvironments = this.$route.query.environment.split(',')
+    }
     if (this.$route.query.sort) {
       this.sortType.name = this.$route.query.sort
 
@@ -401,11 +407,12 @@ export default {
           break
       }
     }
-    if (this.$route.query.environmentntriesPerPage) {
-      this.maxResults = this.$route.query.environmentntriesPerPage
+    if (this.$route.query.limit) {
+      this.maxResults = this.$route.query.limit
     }
-    if (this.$route.query.page)
+    if (this.$route.query.page) {
       this.currentPage = Math.ceil(this.$route.query.page / this.maxResults) + 1
+    }
 
     await Promise.all([
       this.fillVersions(),
@@ -465,34 +472,32 @@ export default {
   },
   methods: {
     async fillVersions() {
-      try {
-        const url = this.showSnapshots
-          ? 'tag/game_version'
-          : 'tag/game_version?type=release'
-
-        const res = await this.$axios.get(url)
-
-        this.versions = res.data
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error(err)
-      }
+      // try {
+      //   const url = this.showSnapshots
+      //     ? 'tag/game_version'
+      //     : 'tag/game_version?type=release'
+      //   const res = await this.$axios.get(url)
+      //   this.versions = res.data
+      // } catch (err) {
+      //   // eslint-disable-next-line no-console
+      //   console.error(err)
+      // }
     },
     async reloadVersions() {
       this.fillVersions()
       await this.onSearchChange(1)
     },
     async fillInitialLicenses() {
-      const licences = (await this.$axios.get('tag/license')).data
-      licences.sort((x, y) => {
-        // Custom case for custom, so it goes to the bottom of the list.
-        if (x.short === 'custom') return 1
-        if (y.short === 'custom') return -1
-        if (x.name < y.name) return -1
-        if (x.name > y.name) return 1
-        return 0
-      })
-      this.licenses = licences
+      // const licences = (await this.$axios.get('tag/license')).data
+      // licences.sort((x, y) => {
+      //   // Custom case for custom, so it goes to the bottom of the list.
+      //   if (x.short === 'custom') return 1
+      //   if (y.short === 'custom') return -1
+      //   if (x.name < y.name) return -1
+      //   if (x.name > y.name) return 1
+      //   return 0
+      // })
+      // this.licenses = licences
     },
     async toggleLicense(license) {
       if (this.selectedLicense) {
@@ -509,7 +514,9 @@ export default {
       await this.onSearchChange(1)
     },
     async clearFilters() {
-      for (const facet of [...this.facets]) await this.toggleFacet(facet, true)
+      for (const facet of [...this.facets]) {
+        await this.toggleFacet(facet, true)
+      }
 
       this.displayLicense = null
       this.selectedLicense = null
@@ -535,10 +542,14 @@ export default {
         this.selectedEnvironments.push(environment)
       }
 
-      if (!sendRequest) await this.onSearchChange(1)
+      if (!sendRequest) {
+        await this.onSearchChange(1)
+      }
     },
     async onSearchChangeToTop(newPageNumber) {
-      if (process.client) window.scrollTo({ top: 0, behavior: 'smooth' })
+      if (process.client) {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
 
       await this.onSearchChange(newPageNumber)
     },
@@ -620,7 +631,7 @@ export default {
         const res = await this.$axios.get(url)
         this.results = res.data.hits
 
-        const pageAmount = Math.ceil(res.data.total_hits / res.data.limit)
+        const pageAmount = Math.ceil(res.data.totalHits / res.data.limit)
 
         this.currentPage = newPageNumber
         if (pageAmount > 7) {

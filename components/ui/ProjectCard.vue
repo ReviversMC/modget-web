@@ -2,7 +2,7 @@
   <article class="project-card">
     <div class="columns">
       <div class="icon">
-        <nuxt-link v-if="isModrinth" :to="'/mod/' + id">
+        <nuxt-link :to="'/package/' + id">
           <img
             :src="iconUrl || 'https://cdn.modrinth.com/placeholder.svg?inline'"
             :alt="name"
@@ -14,10 +14,7 @@
       <div class="info">
         <div class="top">
           <h2 class="title">
-            <nuxt-link v-if="isModrinth" :to="'/mod/' + id">{{
-              name
-            }}</nuxt-link>
-            <a v-else :href="pageUrl">{{ name }}</a>
+            <nuxt-link :to="'/package/' + id">{{ name }}</nuxt-link>
           </h2>
           <p v-if="author" class="author">
             by <nuxt-link :to="'/user/' + author">{{ author }}</nuxt-link>
@@ -154,7 +151,7 @@ export default {
     },
     iconUrl: {
       type: String,
-      default: '#',
+      default: '',
     },
     downloads: {
       type: String,
@@ -185,10 +182,6 @@ export default {
     status: {
       type: String,
       default: null,
-    },
-    isModrinth: {
-      type: Boolean,
-      default: false,
     },
   },
   methods: {
